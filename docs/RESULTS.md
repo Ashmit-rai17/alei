@@ -315,7 +315,7 @@ FRAMING (fixed; the deck and the submission form use these words)
    1) Automated scan (gate 2, 17 Oct): capitalised non-dictionary tokens surviving redaction fell from
       70,946 (Kaggle-baseline redaction) to 37,860 (7,412 distinct). A 100-token sample was ~13-15% person
       names, i.e. roughly 1,000 distinct name tokens remain in the frozen corpus — measured, not hidden.
-   2) 25 passages read by hand: 15 random (seed 20261017) read by Ayush before anything was shared —
+   2) 25 passages read by hand: 15 random (seed 20261017) read by Ashmit before anything was shared —
       zero complainant names; residual items were place names, hospital record numbers (OP No., IP)
       and one stray initial. 10 further passages (seed 20261018) read during development: 5 leaks
       found and fixed in the redactor (a surname, a quoted name, a 'father of' name, a hospital name,

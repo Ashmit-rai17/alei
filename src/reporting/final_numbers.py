@@ -312,7 +312,7 @@ def main():
         w("   1) Automated scan (gate 2, 17 Oct): capitalised non-dictionary tokens surviving redaction fell from")
         w("      70,946 (Kaggle-baseline redaction) to 37,860 (7,412 distinct). A 100-token sample was ~13-15% person")
         w("      names, i.e. roughly 1,000 distinct name tokens remain in the frozen corpus — measured, not hidden.")
-        w("   2) 25 passages read by hand: 15 random (seed 20261017) read by Ayush before anything was shared —")
+        w("   2) 25 passages read by hand: 15 random (seed 20261017) read by Ashmit before anything was shared —")
         w("      zero complainant names; residual items were place names, hospital record numbers (OP No., IP)")
         w("      and one stray initial. 10 further passages (seed 20261018) read during development: 5 leaks")
         w("      found and fixed in the redactor (a surname, a quoted name, a 'father of' name, a hospital name,")
