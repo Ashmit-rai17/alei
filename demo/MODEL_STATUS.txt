@@ -1,0 +1,7 @@
+FINAL model — demo/alei_clf.joblib
+trained:        2026-10-18 18:34:53 IST, src/modelling/train.py in the s390x-pinned venv (.venv-ship)
+training set:   364 LLM-labelled awards; the 79 awards on the human-labelling sheets (incl. the 64 scored) excluded
+macro-F1:       0.541 against 64 human labels produced blind (none of these awards in training)
+                0.306 on the book-grouped held-out split, scored against LLM labels (n=32)
+pickled with:   python 3.12.14, scikit-learn 1.4.1.post1, numpy 1.26.4, scipy 1.11.4, joblib 1.3.2
+sha256:         38e9baf7adc905fb7a811c285741cce6fb38febdf20df7ed24fe12b510b9196e

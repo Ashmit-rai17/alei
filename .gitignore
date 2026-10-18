@@ -23,6 +23,7 @@ data/v1_shipped/
 
 # models and build outputs
 *.joblib
+!demo/alei_clf.joblib
 models/
 *.zip
 explorer.html
