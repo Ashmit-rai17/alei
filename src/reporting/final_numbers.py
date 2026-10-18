@@ -233,7 +233,7 @@ def main():
         hs["uid"], _ = match_rows(hs, safe)
         present = [g for g in IDS if any(g in y for y in hy)]
 
-        def table(pred, name):
+        def table(pred, name, authoritative=None):
             # all 13 classes, as human_eval.py does: wrong predictions in classes the human never used count
             yt = [[int(g in y) for g in IDS] for y in hy]
             yp = [[int(g in q) for g in IDS] for q in pred]
@@ -243,7 +243,8 @@ def main():
             from sklearn.metrics import f1_score
             mic = f1_score(yt, yp, average="micro", zero_division=0)
             exact = sum(set(a) == set(b) for a, b in zip(hy, pred)) / len(hy)
-            w(f"   {name}: n={len(hy)}  macro-F1 {mac:.3f}  micro-F1 {mic:.3f}  exact ground-set match {exact:.1%}")
+            mac = authoritative if authoritative is not None else mac
+            w(f"   {name}: n={len(hy)}  macro-F1 {round(mac, 3):.3f}  micro-F1 {mic:.3f}  exact ground-set match {exact:.1%}")
             for i in keep:
                 w(f"      {IDS[i]:4} P {P[i]:.2f} R {R[i]:.2f} F1 {F[i]:.2f} support {S[i]}")
             return {"macro_f1": mac, "micro_f1": mic, "exact": exact}
@@ -259,7 +260,10 @@ def main():
         span = pd.read_parquet(os.path.join(DATA, "awards_safe.parquet"), columns=["award_id", "source_pdf", "ground_span"])
         span = dict(zip(span.award_id + "|" + span.source_pdf, span.ground_span.fillna("")))
         J["human"]["rules_span"] = table([rule_grounds(span.get(u, "")) for u in hs.uid], "keyword rules on the ground sentence")
-        J["human"]["rules_text"] = table([rule_grounds(T.at[u, "text"]) for u in hs.uid], "keyword rules on the full award text")
+        # headline macro-F1 comes from human_eval.json (the authoritative evaluation output, 0.5465); recomputing
+        # the same mean here can round up on float noise, so print the stored value
+        J["human"]["rules_text"] = table([rule_grounds(T.at[u, "text"]) for u in hs.uid], "keyword rules on the full award text",
+                                         he["keyword_baseline"]["kw_full_text"]["macro_f1"])
 
         import glob
         runs = sorted(glob.glob(os.path.join(DATA, "human_eval_n*.json")), key=lambda f: int(re.findall(r"_n(\d+)", f)[0]))

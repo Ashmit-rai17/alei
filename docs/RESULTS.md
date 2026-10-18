@@ -288,7 +288,7 @@ FRAMING (fixed; the deck and the submission form use these words)
       G9   P 1.00 R 0.36 F1 0.53 support 11
       G10  P 0.89 R 0.80 F1 0.84 support 10
       G12  P 1.00 R 0.25 F1 0.40 support 4
-   keyword rules on the full award text: n=64  macro-F1 0.547  micro-F1 0.571  exact ground-set match 18.8%
+   keyword rules on the full award text: n=64  macro-F1 0.546  micro-F1 0.571  exact ground-set match 18.8%
       G1   P 0.77 R 0.94 F1 0.85 support 32
       G2   P 0.29 R 1.00 F1 0.44 support 4
       G3   P 0.31 R 0.62 F1 0.42 support 8

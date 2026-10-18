@@ -43,7 +43,8 @@ often any ground is used across the market. Outcome rates (who won) describe con
   unchanged so results stay reproducible.
 
 ## Classifier
-- macro-F1 0.541 on 364 training awards, level with a keyword baseline (0.546). The learning curve
+- macro-F1 0.541 on 364 training awards, level with the keyword baseline on full text (0.546; 0.578
+  when the rules read only the extracted ground sentence — a different input, reported separately). The learning curve
   is still rising, so it is data-limited; it is a cheap offline approximation, not an accuracy claim.
 - The book-grouped held-out test set is small (32 awards); its scores move with the split.
 
