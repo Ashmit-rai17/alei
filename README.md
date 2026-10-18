@@ -147,7 +147,7 @@ evaluation is one labeller on 64 awards. Full list: [docs/LIMITATIONS.md](docs/L
 
 ## Team and attribution
 
-- **Ayush** — project lead, pipeline and evaluation design, redaction review
+- **Ashmit** — project lead, pipeline and evaluation design, redaction review
 - **Prashant** — independent human labelling (the 64-award evaluation set)
 - **Usman** — presentation
 - **Divy** — IBM Z / LinuxONE deployment and demo
