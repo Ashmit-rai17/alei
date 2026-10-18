@@ -146,7 +146,7 @@ def main():
     where = "an IBM Z mainframe (s390x)" if platform.machine() == "s390x" else f"{platform.machine()} ({os_name()})"
     if num("rules") and num("classifier"):
         print(f" A deterministic extractor and a learned classifier agree at {num('rules')} and {num('classifier')} macro-F1")
-        print(f" against human labels ({metrics.get('n', '?')} awards labelled blind, none used in training),")
+        print(f" against human labels produced blind on {metrics.get('n', '?')} awards (excluded from classifier training),")
         print(f" on {where}, with nothing leaving the box.")
     print(" input: redacted award text; residual identifiers measured in 22 of 64 audited awards,")
     print(" policy numbers additionally masked for display")

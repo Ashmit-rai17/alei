@@ -60,8 +60,11 @@ def main():
     c = he0.get("classifier", {})
     w("")
     w("FRAMING (fixed; the deck and the submission form use these words)")
-    w(f"   The LLM labelling layer is the result: macro-F1 {q.get('macro_f1', float('nan')):.3f} against "
-      f"{q.get('n', he0.get('n', '?'))} human-verified awards it never saw,")
+    w(f"   The LLM labelling layer is the result: its labels, generated independently, score macro-F1 "
+      f"{q.get('macro_f1', float('nan')):.3f} against")
+    w(f"   human labels produced blind on {q.get('n', he0.get('n', '?'))} awards (the LLM never saw the human labels; "
+      f"it did label these awards).")
+    w("   Separately, those awards were excluded from classifier training. The LLM's comparison:")
     qf = {r["ground"]: r for r in q.get("per_label", []) if r["support"] > 0}
     kf = {r["ground"]: max(r["kw_span_f1"], r["kw_text_f1"]) for r in he0.get("keyword_baseline", {}).get("per_label", [])
           if r["support"] > 0}

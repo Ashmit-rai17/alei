@@ -152,7 +152,9 @@ ALEI — FINAL NUMBERS   (generated 2026-10-18 06:06; source of truth for deck a
 Scope: contested denials that reached an Insurance Ombudsman. Grounds that were challenged, not typical.
 
 FRAMING (fixed; the deck and the submission form use these words)
-   The LLM labelling layer is the result: macro-F1 0.703 against 64 human-verified awards it never saw,
+   The LLM labelling layer is the result: its labels, generated independently, score macro-F1 0.703 against
+   human labels produced blind on 64 awards (the LLM never saw the human labels; it did label these awards).
+   Separately, those 64 awards were excluded from classifier training. The LLM's comparison:
    beating the best keyword rule on G1 0.95 vs 0.85 (n=32), G3 0.71 vs 0.42 (n=8), G6 0.56 vs 0.20 (n=8);
    matching it on G2 1.00 vs 1.00 (n=4), G9 0.90 vs 0.91 (n=11);
    trailing it on G7 0.33 vs 0.40 (n=2), G10 0.78 vs 0.86 (n=10), G12 0.40 vs 0.50 (n=4).

@@ -16,14 +16,14 @@ extractor that run offline on IBM Z (LinuxONE).
 | | |
 |---|---|
 | Corpus | 388 archived URLs → 111 PDFs → 10,337 pages → **7,650 awards** → 3,831 repudiation awards |
-| **LLM labelling vs human** | **macro-F1 0.703** against 64 awards labelled independently and blind by a human |
-| Classifier (TF-IDF + logistic regression) vs human | macro-F1 **0.541**, trained on 364 awards |
+| **LLM labelling vs human** | **macro-F1 0.703**: LLM labels generated independently, scored against human labels produced blind on 64 awards |
+| Classifier (TF-IDF + logistic regression) vs human | macro-F1 **0.541** on the same 64 awards, which were excluded from its 364 training awards |
 | Deterministic keyword baseline vs human | macro-F1 **0.546** (full text); 0.578 on the extracted ground sentence |
 | Verbatim-quote verification | **93.8%** of LLM quotes found word-for-word in the award (97.4% ignoring punctuation/case) |
 | Learning curve (classifier) | **0.32 → 0.44 → 0.50 → 0.54** at 90 → 180 → 270 → 364 training labels; still rising |
 | Taxonomy completeness | the "other" category was used **0 times** across the 64 human-labelled awards |
 
-Every figure, with its denominator and caveats, is in [docs/RESULTS.md](docs/RESULTS.md).
+Two separate claims: the LLM's labels were generated independently and then scored against human labels produced blind (the LLM never saw the human labels); separately, those 64 human-labelled awards were excluded from classifier training. Every figure, with its denominator and caveats, is in [docs/RESULTS.md](docs/RESULTS.md).
 The LLM labelling layer and the dataset are the result; the classifier is a cheap on-device
 approximation and is not presented as an accuracy claim.
 
