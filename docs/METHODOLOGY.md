@@ -40,7 +40,10 @@ are learned from the corpus, because dictionary word lists contain common Indian
 Audit, four independent methods (results in RESULTS.md §11): an automated scan of surviving
 capitalised non-dictionary tokens; 25 passages read by hand; a blind labeller flagging identifiers
 award by award; and a structural scan that found policy numbers several lines below a "Policy No:"
-label. Those are masked at display time (`src/privacy/display_mask.py`) in everything published.
+label. Those are masked at display time (`src/privacy/display_mask.py`) in everything published;
+the frozen corpus is left unchanged so results stay reproducible. The outcome is a measured residual
+rate, not a guarantee: identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap). The redacted text, residuals included, is what the labelling
+API received; raw text never left the machine.
 
 ## 5. Labelling sample (`src/labelling/sample_for_labeling.py`)
 A free-tier LLM API allows ~200k tokens per key per day, so 1,200 of the 3,831 repudiation awards

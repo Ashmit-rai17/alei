@@ -37,7 +37,10 @@ often any ground is used across the market. Outcome rates (who won) describe con
   the human labeller; both rest on n ≤ 4.
 - Human evaluation is one labeller on 64 awards (no inter-annotator agreement); per-ground support is
   small outside G1 (32), G9 (11) and G10 (10). A second batch of 15 was not returned in time.
-- Labelling sent redacted award text to a cloud API (Groq). Raw text was never sent.
+- Privacy, three levels: raw award text never left the development machine; redacted text
+  (`awards_safe.parquet`) was sent to the labelling API (Groq), and in it identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap);
+  published outputs additionally mask policy numbers at display time, while the frozen corpus is left
+  unchanged so results stay reproducible.
 
 ## Classifier
 - macro-F1 0.541 on 364 training awards, level with a keyword baseline (0.546). The learning curve

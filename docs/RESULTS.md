@@ -332,7 +332,7 @@ FRAMING (fixed; the deck and the submission form use these words)
 9. LABELLING COST
    443 awards in 131 successful batches; tokens: 745,963 prompt + 55,001 completion (1,808/award); wall time 2.6 h across 5 runs (rate-limited, not compute-bound)
    keys used (batches): {1: 2, 2: 32, 3: 35, 4: 32}; Groq free tier: 8,000 tokens/min, 7,000 input tokens per request, 200,000 tokens/day per key
-   Every request carried redacted text only (awards_safe.parquet).
+   Requests carried redacted text (awards_safe.parquet), never raw text; residual identifiers measured in 22 of 64 audited awards (§11).
 
 10. ENVIRONMENT: python 3.12.14 (arm64), scikit-learn 1.9.1, numpy 2.5.4, scipy 1.18.1, joblib 1.6.0
 ```

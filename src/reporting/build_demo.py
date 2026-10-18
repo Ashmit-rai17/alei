@@ -115,7 +115,8 @@ FILES
   requirements-s390x.txt, VERSIONS.txt, MODEL_STATUS.txt
 
 PRIVACY
-All text is redacted ([NAME], [POLICY_NO], [HOSPITAL] …). Do not paste it into any AI tool or
+Text is redacted ([NAME], [POLICY_NO], [HOSPITAL] …) to a measured residual rate — identifiers
+remained in 22 of 64 audited awards; policy numbers are additionally masked here. Do not paste it into any AI tool or
 share the files outside the team.
 
 SEND BACK

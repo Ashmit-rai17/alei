@@ -338,7 +338,7 @@ def main():
           f"wall time {wall / 3600:.1f} h across {lg[lg.written > 0].run.nunique()} runs (rate-limited, not compute-bound)")
         w(f"   keys used (batches): {lg.key.dropna().astype(int).value_counts().sort_index().to_dict() if 'key' in lg else '-'}; "
           f"Groq free tier: 8,000 tokens/min, 7,000 input tokens per request, 200,000 tokens/day per key")
-        w("   Every request carried redacted text only (awards_safe.parquet).")
+        w("   Requests carried redacted text (awards_safe.parquet), never raw text; residual identifiers measured in 22 of 64 audited awards (§11).")
 
     import numpy, scipy, sklearn, joblib  # noqa: E401
     w(f"\n10. ENVIRONMENT: python {platform.python_version()} ({platform.machine()}), scikit-learn {sklearn.__version__}, "

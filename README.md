@@ -2,8 +2,8 @@
 
 India's insurance regulator publishes how *often* claims are rejected, but not *why*. The reasons
 exist only inside decisions ("awards") of the Insurance Ombudsman, published as scanned-and-typed
-PDF compilations that nobody can count. Alei turns 111 archived compilations into a structured,
-privacy-redacted dataset of **7,650 awards**, labels the insurer's stated ground for rejection
+PDF compilations that nobody can count. Alei turns 111 archived compilations into a structured
+dataset of **7,650 awards** with personal data redacted to a measured residual rate, labels the insurer's stated ground for rejection
 against a frozen 12-category taxonomy with an LLM whose every label carries a verbatim, verified
 quote, measures that against blind human labels, and ships a small classifier and a deterministic
 extractor that run offline on IBM Z (LinuxONE).
@@ -54,7 +54,8 @@ demo/                     the LinuxONE demo: rules vs classifier on 3 awards, on
 
 Each `src/` folder is separate because each has a different trust boundary: `acquisition` touches
 the network, `parsing` and `privacy` touch raw personal data, `labelling` is the only stage that
-calls an external API (redacted text only), and `modelling`/`reporting` read only redacted outputs.
+calls an external API (redacted text, with a measured residual-identifier rate — see Privacy), and
+`modelling`/`reporting` read only redacted outputs.
 
 ## Pipeline
 
@@ -118,8 +119,19 @@ not published either.
 The published output of the method is structured fields and citations — award id, insurer, date,
 claim type, ground category, and the location of the supporting sentence — not award text.
 
-Raw text never left the development machine. Only redacted text was sent to the labelling API.
-The demo runs fully offline.
+## Privacy — a measured rate, not a guarantee
+
+- **Raw award text** (`awards.parquet`): never left the development machine.
+- **Redacted text** (`awards_safe.parquet`): sent to the labelling API (Groq). Redaction is not
+  complete: identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap).
+- **Published outputs** (explorer, demo, samples): policy numbers are additionally masked at display
+  time. The frozen corpus is deliberately left unchanged so that every result stays reproducible.
+
+The privacy claim is a measured rate. It comes from four audits — an automated scan of surviving
+tokens, 25 passages read by hand, a blind labeller flagging identifiers award by award, and a
+structural scan for numbers below form labels — which disagreed with each other: each found
+identifiers the others missed. Details in [docs/RESULTS.md](docs/RESULTS.md) §11 and
+[docs/LIMITATIONS.md](docs/LIMITATIONS.md). The demo makes no network calls.
 
 ## IBM Z / LinuxONE
 

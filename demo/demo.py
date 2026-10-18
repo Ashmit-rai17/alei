@@ -148,7 +148,8 @@ def main():
         print(f" A deterministic extractor and a learned classifier agree at {num('rules')} and {num('classifier')} macro-F1")
         print(f" against human labels ({metrics.get('n', '?')} awards labelled blind, none used in training),")
         print(f" on {where}, with nothing leaving the box.")
-    print(" redacted text only: names, policy numbers and hospitals were removed before any processing")
+    print(" input: redacted award text; residual identifiers measured in 22 of 64 audited awards,")
+    print(" policy numbers additionally masked for display")
     print("=" * W)
 
 
