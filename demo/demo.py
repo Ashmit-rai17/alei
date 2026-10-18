@@ -66,6 +66,38 @@ def cpu_ram():
     return f"{cpu} x {os.cpu_count()} cores", (f"{ram / 2**30:.1f} GB" if ram else "unknown")
 
 
+def preflight():
+    """Compare the running scikit-learn/numpy with the versions the model was saved under (VERSIONS.txt),
+    by package metadata — nothing is imported, so a mismatched install cannot crash here. On a
+    major.minor mismatch, explain and exit 0. ALEI_FORCE=1 skips the check (runs the degraded path)."""
+    from importlib import metadata
+    want = read(os.path.join(HERE, "VERSIONS.txt"))
+    need = {p: (re.search(rf"{re.escape(p)} ([0-9][\w.]*)", want) or [None, None])[1] for p in ("scikit-learn", "numpy")}
+    have = {}
+    for p in need:
+        try:
+            have[p] = metadata.version(p)
+        except metadata.PackageNotFoundError:
+            have[p] = "not installed"
+    mm = lambda v: ".".join(str(v).split(".")[:2])
+    bad = [p for p in need if need[p] and mm(have[p]) != mm(need[p])]
+    if not bad or os.environ.get("ALEI_FORCE") == "1":
+        return
+    py_need = (re.search(r"python ([0-9.]+)", want) or [None, "3.12"])[1]
+    print("=" * W)
+    print(" ALEI demo — environment check: the classifier cannot run in this Python environment")
+    print(f"   found:    Python {platform.python_version()} · scikit-learn {have['scikit-learn']} · numpy {have['numpy']}")
+    print(f"   required: Python {py_need} · scikit-learn {need['scikit-learn']} · numpy {need['numpy']}"
+          "   (the model was saved under these)")
+    print(" A scikit-learn model only loads reliably under the version that saved it. From the repository root:")
+    print(f"     python{py_need} -m venv .venv && .venv/bin/pip install -r requirements-s390x.txt")
+    print("     demo/run_demo.sh                      # picks up ./.venv automatically")
+    print(" The keyword-rules baseline needs no packages and works on any Python 3:")
+    print("     python3 demo/predict_rules.py < demo/sample_awards.txt")
+    print("=" * W)
+    sys.exit(0)
+
+
 def explain(bundle, feats, names, text, top=3):
     if bundle.get("preprocess_regex"):                     # same cleaning the model was trained with
         text = re.sub(bundle["preprocess_regex"], bundle.get("preprocess_replace", " "), text)
@@ -78,7 +110,8 @@ def explain(bundle, feats, names, text, top=3):
             continue
         contrib = x.multiply(est.coef_.ravel()).tocsr()
         pairs = sorted(zip(contrib.indices, contrib.data), key=lambda t: -t[1])
-        words = [names[i].split("__", 1)[1] for i, v in pairs if v > 0 and names[i].startswith("word__")][:top]
+        words = [] if names is None else [
+            names[i].split("__", 1)[1] for i, v in pairs if v > 0 and names[i].startswith("word__")][:top]
         out.append((c, float(p), words))
     return sorted(out, key=lambda r: -r[1])
 
@@ -88,6 +121,7 @@ def clip(s, n):
 
 
 def main():
+    preflight()
     import joblib
     import numpy
     import scipy
@@ -98,7 +132,10 @@ def main():
     bundle = joblib.load(os.path.join(HERE, "alei_clf.joblib"))
     load_s = time.perf_counter() - t0
     feats = bundle["pipeline"].named_steps["features"]
-    names = feats.get_feature_names_out()
+    try:                                    # attribution only; predictions do not depend on it
+        names = feats.get_feature_names_out()
+    except Exception:
+        names = None
     tag = (read(os.path.join(HERE, "MODEL_STATUS.txt")).strip() or "INTERIM").split()[0]
 
     print("=" * W)
@@ -121,7 +158,11 @@ def main():
     rules = [rule_explain(body) for _, body in awards]
     t_rules = time.perf_counter() - t
     t = time.perf_counter()
-    preds = [explain(bundle, feats, names, body) for _, body in awards]
+    try:
+        preds = [explain(bundle, feats, names, body) for _, body in awards]
+        clf_err = None
+    except Exception as e:                  # e.g. a scikit-learn version the model was not saved under
+        preds, clf_err = [[] for _ in awards], f"{type(e).__name__}: {str(e)[:60]}"
     t_clf = time.perf_counter() - t
 
     print(f" 1  DETERMINISTIC EXTRACTOR — keyword rules, no ML · {metrics.get('rules', '')}")
@@ -131,7 +172,11 @@ def main():
             print(f"       {g + ' ' + NAMES[g] if g else '(no rule fired)':34} {clip(chr(34) + phrase + chr(34), W - 42) if g else ''}")
     print("-" * W)
     print(f" 2  LEARNED CLASSIFIER — TF-IDF + logistic regression · {metrics.get('classifier', '')}")
-    for k, ((aid, ctype, llm), _) in enumerate(awards):
+    if clf_err:
+        print(f"    classifier unavailable on scikit-learn {sklearn.__version__} ({clf_err}); see VERSIONS.txt")
+    elif names is None:
+        print(f"    (per-word attribution unavailable on scikit-learn {sklearn.__version__}; predictions shown)")
+    for k, ((aid, ctype, llm), _) in enumerate([] if clf_err else awards):
         print(f"    award {k + 1}  {clip(aid, 30)} · reference label {llm}")
         for g, p, words in preds[k] or [("", 0.0, [])]:
             if g:
