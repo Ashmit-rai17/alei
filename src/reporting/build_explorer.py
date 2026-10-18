@@ -168,7 +168,7 @@ TEMPLATE = r"""<!doctype html>
 --card:#202025;--accent:#8db8e3;--bar:#5d8fc2;--warn-bg:#3b3215;--warn-fg:#f2dc9b;--bad:#f08a8a;--ok:#86c99a;--hl:#6b5714;--hl2:#1f4d70;--hlbad:#6e2a2a}}
 :root[data-theme="dark"]{--bg:#17171a;--fg:#e8e6e1;--muted:#a19d94;--line:#34343a;--card:#202025;--accent:#8db8e3;--bar:#5d8fc2;
 --warn-bg:#3b3215;--warn-fg:#f2dc9b;--bad:#f08a8a;--ok:#86c99a;--hl:#6b5714;--hl2:#1f4d70;--hlbad:#6e2a2a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
 header{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
 header h1{font-size:18px;margin:0}nav a{margin-right:14px;color:var(--accent);text-decoration:none;font-weight:600}
 nav a.on{text-decoration:underline}main{max-width:1150px;margin:0 auto;padding:16px}
@@ -185,10 +185,15 @@ th{position:sticky;top:0;background:var(--bg)}.scroll{overflow-x:auto}
 .chip{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:0 7px;margin:1px 3px 1px 0;font-size:12px;white-space:nowrap}
 .chip.bad{border-color:var(--bad);color:var(--bad)}.sq-suspect{color:var(--bad)}.sq-ok{color:var(--ok)}
 .meta{display:grid;grid-template-columns:max-content 1fr;gap:2px 14px;font-size:14px;margin-bottom:12px}
-.lab{border-left:4px solid var(--accent);padding:6px 10px;margin:8px 0;background:var(--card)}
-.lab.unv{border-left-color:var(--bad)}.text{white-space:pre-wrap;background:var(--card);border:1px solid var(--line);padding:14px;
-font:13px/1.55 ui-monospace,Menlo,Consolas,monospace;overflow-wrap:anywhere}
-mark{background:var(--hl);color:inherit;border-radius:2px}mark.alt{background:var(--hl2)}mark.flash{outline:3px solid var(--accent)}
+.lab{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:10px 14px;margin:10px 0;background:var(--card)}
+.lab.unv{border-left-color:var(--bad)}.lab .q{font:italic 16px/1.6 Charter,"Iowan Old Style",Georgia,serif;margin:6px 0 2px}
+.text{white-space:pre-wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 26px;max-width:74ch;
+font:17px/1.75 Charter,"Iowan Old Style","Source Serif Pro",Georgia,serif;overflow-wrap:break-word;hyphens:auto}
+.tag{font:600 10.5px/1 system-ui,-apple-system,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+background:var(--line);border-radius:4px;padding:3px 5px;vertical-align:2px;white-space:nowrap}
+mark{background:var(--hl);color:inherit;border-radius:3px;padding:1px 1px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+mark.alt{background:var(--hl2)}mark.flash{outline:3px solid var(--accent);outline-offset:1px}
+h2{font-size:18px;margin:22px 0 10px}tr:hover td{background:var(--card)}
 .cell{cursor:pointer}.cell:hover{background:var(--warn-bg)}h2{font-size:17px;margin:4px 0 10px}
 @media (max-width:600px){.bars{grid-template-columns:1fr auto}.bars .bar{grid-column:1/-1}}
 </style></head><body>
@@ -221,6 +226,7 @@ async function load(){
   if(typeof DecompressionStream==='undefined'){$('#app').innerHTML='<p>This browser lacks DecompressionStream; open in a current Chrome, Edge, Firefox or Safari.</p>';return}
   const txt=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
   D=JSON.parse(txt);NAMES=D.meta.names;ORDER=Object.keys(NAMES);
+  for(const a of D.awards)a.t=cleanText(a.t);
   const cts=[...new Set(D.awards.map(a=>a.ct))].sort();
   $('#fCt').innerHTML+=cts.map(c=>`<option>${esc(c)}</option>`).join('');
   $('#metaLine').textContent=`${D.meta.n_awards.toLocaleString()} awards · ${D.meta.n_labelled.toLocaleString()} labelled (documented sample) · labels: ${D.meta.labels_file} · built ${D.meta.generated}`;
@@ -305,9 +311,27 @@ function list(o){
   if(V.length>lim)h+=`<p><button class="link" onclick="go('list?${qs({...o,lim:lim+300})}')">show ${Math.min(300,V.length-lim)} more</button></p>`;
   $('#app').innerHTML=h;
 }
+// Display text: the PDF's hard line breaks, page footers, separator rules and space runs removed, so the
+// award reads as paragraphs. Only whitespace and boilerplate change, so quotes still match (locate below
+// ignores whitespace). Breaks are kept before list items and numbered points, after headings ending ":",
+// and between paragraphs.
+function cleanText(t){
+  return t.replace(/\r/g,'')
+    .replace(/^[ \t]*Page\s+\d+\s+of\s+\d+[ \t]*$/gmi,'')
+    .replace(/^[ \t]*([-*=_#~.•·])\1{3,}[ \t]*$/gm,'')
+    .replace(/[ \t]+/g,' ')
+    .replace(/ *\n */g,'\n')
+    .replace(/\n{3,}/g,'\n\n')
+    .replace(/([^\n:;])\n(?!\n|\(?[0-9]{1,2}[.)]\s|\(?[a-z]{1,4}\)\s|[•·]\s|[A-Z][A-Z .&/]{8,}\n)/g,'$1 ')
+    .trim();
+}
+const TAG_LABEL={NAME:'name',NAME_ADDRESS:'name & address',POLICY_NO:'policy no.',HOSPITAL:'hospital',NUM:'number',
+  ADDRESS:'address',PIN:'pin',PHONE:'phone',EMAIL:'email'};
+const tagify=h=>h.replace(/\[([A-Z_]+)\]/g,(m,k)=>`<span class="tag" title="redacted">${TAG_LABEL[k]||k.toLowerCase()}</span>`);
 // locate a quote in the text: whitespace-insensitive, otherwise exact
 function locate(text,q){
-  const toks=q.trim().split(/\s+/).filter(Boolean); if(!toks.length)return null;
+  // separator rules are dropped from the display text, so drop them from the quote as well
+  const toks=q.replace(/([-*=_#~.•·])\1{3,}/g,' ').trim().split(/\s+/).filter(Boolean); if(!toks.length)return null;
   const re=new RegExp(toks.map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('\\s+'));
   const m=re.exec(text); return m?[m.index,m.index+m[0].length]:null;
 }
@@ -318,7 +342,7 @@ function award(o){
   // split text at every span boundary; each piece knows which labels cover it
   const cuts=[...new Set([0,a.t.length,...spans.flatMap(s=>[s.s,s.e])])].sort((x,y)=>x-y);
   let body='';
-  for(let k=0;k<cuts.length-1;k++){const s=cuts[k],e=cuts[k+1],piece=esc(a.t.slice(s,e));
+  for(let k=0;k<cuts.length-1;k++){const s=cuts[k],e=cuts[k+1],piece=tagify(esc(a.t.slice(s,e)));
     const cov=spans.filter(x=>x.s<=s&&x.e>=e);
     body+=cov.length?`<mark id="q${cov[0].i}" class="${cov[0].g===o.g||!o.g?'':'alt'}" title="${cov.map(c=>c.g).join(', ')}">${piece}</mark>`:piece}
   let h=`<p><button class="link" onclick="history.back()">← back</button></p><h2>${esc(a.id)}</h2>
@@ -331,7 +355,7 @@ function award(o){
   else if(!L.length)h+='<p class="muted">No ground was found in this award (or none passes the current filters).</p>';
   L.forEach((l,i)=>{const found=spans.some(s=>s.i===i);
     h+=`<div class="lab ${l.v?'':'unv'}"><b>${l.g}</b> ${esc(NAMES[l.g]||'')} ${l.v?'<span class="chip">quote verified</span>':'<span class="chip bad">quote NOT found in text</span>'} <span class="chip">source: ${esc(l.s||'missing')}</span>
-    ${l.n?`<div class="muted">note: ${esc(l.n)}</div>`:''}<div>“${esc(l.q)}”</div>${found?`<button class="link" onclick="flash(${i})">show in text ↓</button>`:''}</div>`});
+    ${l.n?`<div class="muted">note: ${esc(l.n)}</div>`:''}<div class="q">“${tagify(esc(l.q))}”</div>${found?`<button class="link" onclick="flash(${i})">show in text ↓</button>`:''}</div>`});
   h+=`<h2>Award text (redacted)</h2><div class="text">${body}</div>`;
   $('#app').innerHTML=h;
   const first=spans.find(s=>!o.g||s.g===o.g); if(first)setTimeout(()=>flash(first.i),50);
