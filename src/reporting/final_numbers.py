@@ -321,6 +321,7 @@ def main():
         w(f"   3) Blind labeller, award by award (Prashant, phase 2, {len(h2)} awards, v1-redacted text): "
           f"{int((seg != '').sum())} of {len(h2)} ({(seg != '').mean():.0%}) carry at least one unredacted identifier:")
         w(f"      {cnt}; over-redaction flagged once.")
+        w("      The API received a later redaction: word by word it masks everything v1 masked in the shared text (22/64 is an upper bound there), but re-segmentation added 689 unaudited words to 15 of these awards, and the later redaction has not itself been measured.")
         w("   4) Structural scan, prompted by (3): in form-style awards the policy number sits several lines")
         w("      below the 'Policy No:' label (e.g. a Star Health number in the 2021 health book), which the")
         w("      redactor never looked at. Policy-number-shaped values under the label (dates, month-years and")
@@ -345,7 +346,7 @@ def main():
           f"wall time {wall / 3600:.1f} h across {lg[lg.written > 0].run.nunique()} runs (rate-limited, not compute-bound)")
         w(f"   keys used (batches): {lg.key.dropna().astype(int).value_counts().sort_index().to_dict() if 'key' in lg else '-'}; "
           f"Groq free tier: 8,000 tokens/min, 7,000 input tokens per request, 200,000 tokens/day per key")
-        w("   Requests carried redacted text (awards_safe.parquet), never raw text; residual identifiers measured in 22 of 64 audited awards (§11).")
+        w("   Requests carried redacted text (awards_safe.parquet), never raw text; residual identifiers measured in 22 of 64 awards on the earlier v1 redaction — an upper bound only for the audited text; the improved redaction the API received has not been measured (§11).")
 
     import numpy, scipy, sklearn, joblib  # noqa: E401
     w(f"\n10. ENVIRONMENT: python {platform.python_version()} ({platform.machine()}), scikit-learn {sklearn.__version__}, "

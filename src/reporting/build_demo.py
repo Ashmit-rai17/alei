@@ -115,8 +115,9 @@ FILES
   requirements-s390x.txt, VERSIONS.txt, MODEL_STATUS.txt
 
 PRIVACY
-Text is redacted ([NAME], [POLICY_NO], [HOSPITAL] …) to a measured residual rate — identifiers
-remained in 22 of 64 audited awards; policy numbers are additionally masked here. Do not paste it into any AI tool or
+Text is redacted ([NAME], [POLICY_NO], [HOSPITAL] …). Residual identifiers were measured in 22 of 64
+awards on the earlier v1 redaction — an upper bound only for the audited text; the improved redaction
+has not been measured. Policy numbers are additionally masked here. Do not paste it into any AI tool or
 share the files outside the team.
 
 SEND BACK

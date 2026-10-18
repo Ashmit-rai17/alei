@@ -323,6 +323,7 @@ FRAMING (fixed; the deck and the submission form use these words)
       record numbers and the stray initial remain in the frozen corpus.
    3) Blind labeller, award by award (Prashant, phase 2, 64 awards, v1-redacted text): 22 of 64 (34%) carry at least one unredacted identifier:
       {'policy number or prefix': 17, 'hospital or clinic name': 8, 'city, town, village or locality': 4, 'person name': 1, 'other identifier (registration no., bank branch)': 2}; over-redaction flagged once.
+      The API received a later redaction: word by word it masks everything v1 masked in the shared text (22/64 is an upper bound there), but re-segmentation added 689 unaudited words to 15 of these awards, and the later redaction has not itself been measured.
    4) Structural scan, prompted by (3): in form-style awards the policy number sits several lines
       below the 'Policy No:' label (e.g. a Star Health number in the 2021 health book), which the
       redactor never looked at. Policy-number-shaped values under the label (dates, month-years and
@@ -334,7 +335,7 @@ FRAMING (fixed; the deck and the submission form use these words)
 9. LABELLING COST
    443 awards in 131 successful batches; tokens: 745,963 prompt + 55,001 completion (1,808/award); wall time 2.6 h across 5 runs (rate-limited, not compute-bound)
    keys used (batches): {1: 2, 2: 32, 3: 35, 4: 32}; Groq free tier: 8,000 tokens/min, 7,000 input tokens per request, 200,000 tokens/day per key
-   Requests carried redacted text (awards_safe.parquet), never raw text; residual identifiers measured in 22 of 64 audited awards (§11).
+   Requests carried redacted text (awards_safe.parquet), never raw text; residual identifiers measured in 22 of 64 awards on the earlier v1 redaction — an upper bound only for the audited text; the improved redaction the API received has not been measured (§11).
 
 10. ENVIRONMENT: python 3.12.14 (arm64), scikit-learn 1.9.1, numpy 2.5.4, scipy 1.18.1, joblib 1.6.0
 ```

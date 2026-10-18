@@ -193,8 +193,8 @@ def main():
         print(f" A deterministic extractor and a learned classifier agree at {num('rules')} and {num('classifier')} macro-F1")
         print(f" against human labels produced blind on {metrics.get('n', '?')} awards (excluded from classifier training),")
         print(f" on {where}, with nothing leaving the box.")
-    print(" input: redacted award text; residual identifiers measured in 22 of 64 audited awards,")
-    print(" policy numbers additionally masked for display")
+    print(" input: redacted text. Residual identifiers: 22 of 64 awards on an earlier redaction, an")
+    print(" upper bound for audited text only; this redaction is unmeasured. Policy numbers masked.")
     print("=" * W)
 
 

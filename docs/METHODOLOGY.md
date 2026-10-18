@@ -42,7 +42,7 @@ capitalised non-dictionary tokens; 25 passages read by hand; a blind labeller fl
 award by award; and a structural scan that found policy numbers several lines below a "Policy No:"
 label. Those are masked at display time (`src/privacy/display_mask.py`) in everything published;
 the frozen corpus is left unchanged so results stay reproducible. The outcome is a measured residual
-rate, not a guarantee: identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap). The redacted text, residuals included, is what the labelling
+rate, not a guarantee: identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap). That audit was of the v1 redaction of those awards; the API received a later, improved redaction. Compared word by word, the later redaction masks everything v1 masked in the text the two versions share, so 22/64 is an upper bound for that text. It is not an upper bound for everything the API saw: re-segmentation added 689 words to 15 of the 64 awards that no human audited, and the improved redaction as a whole has not been measured. The redacted text, residuals included, is what the labelling
 API received; raw text never left the machine.
 
 ## 5. Labelling sample (`src/labelling/sample_for_labeling.py`)

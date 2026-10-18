@@ -38,7 +38,7 @@ often any ground is used across the market. Outcome rates (who won) describe con
 - Human evaluation is one labeller on 64 awards (no inter-annotator agreement); per-ground support is
   small outside G1 (32), G9 (11) and G10 (10). A second batch of 15 was not returned in time.
 - Privacy, three levels: raw award text never left the development machine; redacted text
-  (`awards_safe.parquet`) was sent to the labelling API (Groq), and in it identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap);
+  (`awards_safe.parquet`) was sent to the labelling API (Groq), and in it identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap). That audit was of the v1 redaction of those awards; the API received a later, improved redaction. Compared word by word, the later redaction masks everything v1 masked in the text the two versions share, so 22/64 is an upper bound for that text. It is not an upper bound for everything the API saw: re-segmentation added 689 words to 15 of the 64 awards that no human audited, and the improved redaction as a whole has not been measured;
   published outputs additionally mask policy numbers at display time, while the frozen corpus is left
   unchanged so results stay reproducible.
 

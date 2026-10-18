@@ -123,7 +123,7 @@ claim type, ground category, and the location of the supporting sentence — not
 
 - **Raw award text** (`awards.parquet`): never left the development machine.
 - **Redacted text** (`awards_safe.parquet`): sent to the labelling API (Groq). Redaction is not
-  complete: identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap).
+  complete: identifiers remained in 22 of 64 awards audited one by one — 17 policy numbers or prefixes, 8 hospital or clinic names, 4 place names, 2 other identifiers, 1 person name (categories overlap). That audit was of the v1 redaction of those awards; the API received a later, improved redaction. Compared word by word, the later redaction masks everything v1 masked in the text the two versions share, so 22/64 is an upper bound for that text. It is not an upper bound for everything the API saw: re-segmentation added 689 words to 15 of the 64 awards that no human audited, and the improved redaction as a whole has not been measured.
 - **Published outputs** (explorer, demo, samples): policy numbers are additionally masked at display
   time. The frozen corpus is deliberately left unchanged so that every result stays reproducible.
 

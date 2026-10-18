@@ -1,7 +1,8 @@
 """Task A — label repudiation awards against TAXONOMY.md with Qwen.
 
 Reads data/awards_safe.parquet only — redacted text, never raw text. Redaction is measured, not complete:
-residual identifiers remained in 22 of 64 audited awards (docs/LIMITATIONS.md). This is what the API receives.
+residual identifiers remained in 22 of 64 awards audited on the earlier v1 redaction — an upper bound only
+for the audited text; the improved redaction sent to the API has not been measured (docs/LIMITATIONS.md).
 
   QWEN_API_KEY, QWEN_API_KEY_2, QWEN_API_KEY_3, …   one or more keys (in .env); used in order,
                  moving to the next when one hits its daily cap. .env is re-read whenever a key is
