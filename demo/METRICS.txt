@@ -1,0 +1,3 @@
+rules=macro-F1 0.546 vs human
+classifier=macro-F1 0.541 vs human
+n=64

@@ -1,0 +1,30 @@
+# secrets and environments
+.env
+.env.*
+.venv*/
+__pycache__/
+*.pyc
+.DS_Store
+
+# data: nothing but the README, .gitkeep and the 3 masked samples
+data/*
+!data/README.md
+!data/.gitkeep
+!data/samples/
+data/samples/*
+!data/samples/sample_awards.txt
+# (explicit, in case the allow-list above is ever loosened)
+data/pdfs/
+data/awards.parquet
+data/awards_safe.parquet
+data/qwen_labels*.jsonl
+data/prashant/
+data/v1_shipped/
+
+# models and build outputs
+*.joblib
+models/
+*.zip
+explorer.html
+*.parquet
+*.xlsx

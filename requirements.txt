@@ -1,0 +1,10 @@
+# Full pipeline, development machine (Python 3.12). Model training uses requirements-s390x.txt instead.
+pymupdf==1.28.2
+pandas==3.0.6
+pyarrow==26.0.0
+openpyxl==3.1.5
+requests==2.34.2
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+joblib==1.6.0
